@@ -58,6 +58,7 @@ public class ChemicalFormula {
             System.out.println(analyzeFormulaCompleteness(formula));
         } catch (IOException ioe) {
             System.err.println("I/O Exception occurred while reading std in.");
+            System.exit(1);
         } catch (IllegalArgumentException iae) {
             System.out.println("F");
         }
