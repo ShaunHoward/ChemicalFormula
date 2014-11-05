@@ -8,19 +8,17 @@ the following things:
 Empty String (just whitespace)
 Multiple lines (invalid formula)
 Spaces in string (invalid formula)
+Matched Parenthesis (necessary for valid formula)
 
 The validator acts as a barricade for the program. It is called
 to after the user enters the string. This barricade protects the
 other methods of the ChemicalFormula class from bad input data.
 
-In the ChemicalFormula class, local error handling is used. 
-I tried to implement matching parentheses, but without a 
-grammar, lexer, and parser, this task was a bit cumbersome
-and complex. That implementation used exceptions, which
-were propagated up to the main method and caught in the same class.
-The program would then print "F" in any of the exception catches unless
-an IOException occurred, in which a simple message about
-in/out issues would display to the user. 
+In the ChemicalFormula class, local and global error handling is used.
+Global error handling is used for validating and checking grouping of
+parentheses, including group multipliers. Local error handling is used
+when matching the formulas to the formula regular expression, i.e.
+in the analyzeFormulaSoundness() method.
 
 The FormulaValidator class uses an error list to track errors globally.
 When an error is found in the context, it is added to the list.
@@ -34,16 +32,18 @@ keep going on the formula. If there are errors, the validator returns
 a response to stop and print "F".
 
 The program has focuses in correctness and robustness. It is correct
-upon the extent to which it works. It is robust in avoiding complications
-with matching parentheses and high complexity code. It simply avoids those
-vulnerable operations that could cause infinite loops or program crashes
-in an effort to provide a manageable, mostly accurate solution that will
-just print "F" in nested cases. This is correct for the program because
-that is how it was written. 
+to the extent in which an in/out error does not occur. It is robust in
+almost always providing a "T" or "F" answer to the user no matter the input.
+The program does not use exceptions except for in/out errors, which are caught
+and the user is notified of the error.
+
+Try-with-resources is used for reading the standard in in an effort to minimize
+code and successfully close resources after use or only use the buffered input
+while there are resources. This handles the stream closing aspect of the program.
 
 Assertions are used in places to test pre-conditions and post-conditions.
-They test for things that should never be true. They even test in the
-matching parentheses methods that I wrote but do not use, so that if I 
-did use those methods I could better debug my code.
+They test for things that should never be true. They test things like null
+and emptiness or string values that should only be "T" or "F". These asserts
+are used in places where it matters and are not over-used.
 
 
