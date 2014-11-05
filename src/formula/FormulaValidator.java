@@ -39,7 +39,7 @@ public class FormulaValidator {
         checkEmptyError(formula);
         checkMultipleLineError(formula);
         checkSpaceError(formula);
-        checkMatchedParenthesis(formula);
+//        checkMatchedParenthesis(formula);
         return checkPotentialFormula(errors);
     }
 

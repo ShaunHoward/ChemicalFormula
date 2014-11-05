@@ -20,18 +20,18 @@ import java.util.regex.Pattern;
  */
 public class ChemicalFormula {
 
-//    // Pattern for identifying syntactically valid chemical formula.
-//    static Pattern FORMULA_PATTERN =
-//            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
-//                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
-//                    "([A-Z][a-z]?[2-9]?)*)" +
-//                    "|([A-Z][a-z]?[2-9]?)+");
-
     // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
-            Pattern.compile("([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)])" +
-                    "|([A-Z][a-z]?[2-9]?)");
+            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
+                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
+                    "([A-Z][a-z]?[2-9]?)*)" +
+                    "|([A-Z][a-z]?[2-9]?)+");
 
+//    // Pattern for identifying syntactically valid chemical formula.
+//    static Pattern FORMULA_PATTERN =
+//            Pattern.compile("([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)])" +
+//                    "|([A-Z][a-z]?[2-9]?)");
+//
     // Pattern for identify the correct multiplier in a formula.
     static Pattern MULTIPLIER = Pattern.compile("[2-9]");
 
@@ -71,7 +71,7 @@ public class ChemicalFormula {
      * @param formula - the formula to check for syntactical completeness
      * @return whether the formula is a syntactically valid chemical formula
      */
-    private static String analyzeFormulaCompleteness(String formula) throws IllegalArgumentException {
+    public static String analyzeFormulaCompleteness(String formula){
         FormulaValidator validator = new FormulaValidator();
         //Validate the syntactical soundness of the formula.
         boolean potentialFormula = validator.validateFormula(formula);
@@ -94,16 +94,20 @@ public class ChemicalFormula {
      *
      * @param formula - the formula to check for syntactical soundness
      */
-    private static String analyzeFormulaSoundness(String formula) throws IllegalArgumentException {
+    private static String analyzeFormulaSoundness(String formula){
         String matches = "T";
-        List<String> components = parseComponents(formula);
-        for (String component : components){
-            if (matches.equals("F")){
-                return matches;
-            } else if (!FORMULA_PATTERN.matcher(component).matches()) {
-                matches = "F";
-            }
+        Matcher matcher = FORMULA_PATTERN.matcher(formula);
+        if (!matcher.matches()){
+            matches = "F";
         }
+//        List<String> components = parseComponents(formula);
+//        for (String component : components){
+//            if (matches.equals("F")){
+//                return matches;
+//            } else if (!FORMULA_PATTERN.matcher(component).matches()) {
+//                matches = "F";
+//            }
+//        }
 
         return matches;
     }
