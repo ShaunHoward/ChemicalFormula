@@ -20,22 +20,13 @@ import java.util.regex.Pattern;
  */
 public class ChemicalFormula {
 
-//    // Pattern for identifying syntactically valid chemical formula.
-//    static Pattern FORMULA_PATTERN =
-//            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
-//                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
-//                    "([A-Z][a-z]?[2-9]?)*)" +
-//                    "|([A-Z][a-z]?[2-9]?)+");
-// Pattern for identifying syntactically valid chemical formula.
+    // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
             Pattern.compile("([A-Z][a-z]?([2-9][0-9]*)?)+");
+
+    // Formula to match in assertions.
     static String FORMULA = "([A-Z][a-z]?([2-9][0-9]*)?)+";
 
-//    // Pattern for identifying syntactically valid chemical formula.
-//    static Pattern FORMULA_PATTERN =
-//            Pattern.compile("([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)])" +
-//                    "|([A-Z][a-z]?[2-9]?)");
-//
     // Pattern for identify the correct multiplier in a formula.
     static Pattern MULTIPLIER = Pattern.compile("[2-9]");
 
@@ -49,8 +40,7 @@ public class ChemicalFormula {
     public static void main(String[] args) {
         String formula = "";
 
-        try (FileInputStream fis = new FileInputStream(new File(args[0]));
-             BufferedReader br = new BufferedReader(new InputStreamReader(fis, args[1]))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String appendage;
 
             // Read the input from std in
@@ -80,11 +70,12 @@ public class ChemicalFormula {
      */
     public static String analyzeFormulaCompleteness(String formula){
         FormulaValidator validator = new FormulaValidator();
-        //Validate the syntactical soundness of the formula.
+        //Validate the context of the formula.
         boolean potentialFormula = validator.validateFormula(formula);
         String potential = "";
 
         if (potentialFormula){
+            // Analyze the syntactical soundness of the formula.
             potential = analyzeFormulaSoundness(formula);
         } else {
             potential = "F";
@@ -99,7 +90,7 @@ public class ChemicalFormula {
 
     /**
      * Analyzes the syntax soundness of the input formula string
-     * with a formula regular expression.
+     * with parentheses group checking and a formula regular expression.
      * Returns a string "T" if the input formula is
      * syntactically valid, otherwise returns a string "F".
      *
@@ -110,7 +101,7 @@ public class ChemicalFormula {
         assert formula != null : "Formula is null in soundness check.";
         assert FORMULA_PATTERN.toString().equals(FORMULA) : "Formula pattern is not correct pattern.";
 
-        if (!(formula = checkParenthesesGrouping(formula)).isEmpty()){
+        if (!(formula = stripParentheses(formula)).isEmpty()){
             Matcher matcher = FORMULA_PATTERN.matcher(formula);
             if (!matcher.matches()) {
                 matches = "F";
@@ -118,40 +109,39 @@ public class ChemicalFormula {
         } else {
             matches = "F";
         }
-//        List<String> components = parseComponents(formula);
-//        for (String component : components){
-//            if (matches.equals("F")){
-//                return matches;
-//            } else if (!FORMULA_PATTERN.matcher(component).matches()) {
-//                matches = "F";
-//            }
-//        }
 
         return matches;
     }
 
     /**
-     * Checks the parentheses grouping in the given formula. Determines
-     * whether the grouping multiplier is valid and strips the parentheses
-     * from the formula to reduce complexity in checking the formula with
+     * Removes the parentheses grouping in the given formula as long
+     * as it has the correct type of grouping with valid multipliers.
+     * This is an effort to reduce complexity in checking the formula with
      * the formula regular expression.
      *
      * @param formula - the formula to check the parentheses grouping of
      * @return a parentheses-stripped string of the formula or an empty string
      * if the parentheses grouping was incorrect
      */
-    private static String checkParenthesesGrouping(String formula){
+    private static String stripParentheses(String formula){
         assert formula != null : "Formula is null during stripping of parentheses.";
         StringBuilder formulaBuilder = new StringBuilder(formula);
         StringBuilder emptyBuilder = new StringBuilder("");
+
+        // Strips all front parentheses.
         stripFrontParentheses(formulaBuilder);
         int endParenIndex = 0;
         Matcher multMatcher;
 
+        // Check the grouping multipliers and strip ending parentheses if correct grouping.
         while ((endParenIndex = formulaBuilder.indexOf(")")) > -1){
             formulaBuilder.deleteCharAt(endParenIndex);
+
+            // Try to check for multiplier of group.
             if (endParenIndex < formulaBuilder.length()) {
                 char multiplier = formulaBuilder.charAt(endParenIndex);
+
+                //Check multiplier digit, if there is one.
                 if (Character.isDigit(multiplier)) {
                     multMatcher = MULTIPLIER.matcher(Character.toString(multiplier));
                     if (!multMatcher.matches()){
@@ -180,72 +170,4 @@ public class ChemicalFormula {
             formulaBuilder.deleteCharAt(beginParenIndex);
         }
     }
-
-    /**
-     * Parses the formula components based on parentheses.
-     * The parsed tokens are put into a list and returned.
-     * @param formula - the formula to parse based on parentheses
-     * @return the list of parsed formula tokens
-     * @throws IllegalArgumentException - thrown when a parentheses multiplier
-     * does not lie between 2 and 9
-     */
-    private static List<String> parseComponents(String formula) throws IllegalArgumentException {
-        List<String> components = new ArrayList<>();
-        String subFormula = "";
-        int endParenIndex = 0;
-        assert formula != null : "Formula is null before parsing.";
-
-        //Parses the parenthesized components into list.
-        if (formula.contains("(")){
-            while(formula.contains("(")){
-                endParenIndex = formula.indexOf(")");
-                subFormula = formula.substring(formula.lastIndexOf("("), endParenIndex);
-                checkParenthesesMultiplier(formula, endParenIndex);
-                components.add(subFormula);
-                formula.replace(subFormula, "");
-            }
-
-        }
-
-        assert formula != null : "Formula is null after parsing.";
-        assert formula.contains("(") == false : "Parentheses were not correctly parsed.";
-
-        //Adds remaining components to list.
-        components.add(formula);
-        assert !components.isEmpty() : "Component list is empty after parsing.";
-        return components;
-    }
-
-    /**
-     * Checks the multiplier that follows the parentheses of a chemical formula.
-     * Throws an exception if the multiplier is not between 2 and 9.
-     *
-     * @param formula - the formula to check the multiplier in
-     * @param endParenIndex - where to begin checking for the multiplier at
-     * @throws IllegalFormatException - thrown when the multiplier is not between 2 and 9
-     */
-    private static void checkParenthesesMultiplier(String formula, int endParenIndex) throws IllegalFormatException {
-        assert formula != null : "Formula is null before checking parentheses multiplier.";
-        StringBuilder formulaBuilder = new StringBuilder(formula);
-        assert endParenIndex > 1 : "Ending parenthesis index is at beginning of formula.";
-        int currIndex = endParenIndex + 1;
-        StringBuilder numberBuilder = new StringBuilder();
-
-        while(Character.isDigit(formulaBuilder.charAt(currIndex))){
-            numberBuilder.append(formulaBuilder.charAt(currIndex));
-            formulaBuilder.deleteCharAt(currIndex);
-            currIndex++;
-        }
-
-        assert !Character.isDigit(formulaBuilder.charAt(currIndex)) :
-                "Character was digit when it should not have been.";
-        Matcher matcher = MULTIPLIER.matcher(numberBuilder.toString());
-        if (!matcher.matches()){
-            throw new IllegalArgumentException("Incorrect multipliers following parentheses.");
-        }
-
-        formula = formulaBuilder.toString();
-        assert formula != null : "Formula is null after checking parentheses multiplier.";
-    }
-
 }

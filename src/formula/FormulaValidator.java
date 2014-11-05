@@ -97,11 +97,14 @@ public class FormulaValidator {
         Stack parentheses = new Stack();
         int beginParenIndex = 0;
         int endParenIndex = 0;
+        // Check for any beginning parentheses.
         while((beginParenIndex = formulaBuilder.indexOf("(")) > -1){
             formulaBuilder.deleteCharAt(beginParenIndex);
             parentheses.push("(");
+            // Check for appropriate ending parentheses.
             if((endParenIndex = formulaBuilder.indexOf(")")) > -1 && endParenIndex > beginParenIndex){
                 formulaBuilder.deleteCharAt(endParenIndex);
+                // Try to match parentheses.
                 if (!parentheses.isEmpty()) {
                     parentheses.pop();
                 } else {
@@ -111,6 +114,7 @@ public class FormulaValidator {
         }
         assert parentheses != null :"Stack is null after checking matched parentheses.";
         assert parentheses != null :"Formula builder is null after checking matched parentheses.";
+        // Check if there are any parentheses left unmatched.
         checkRemainingParentheses(parentheses, formulaBuilder);
     }
 
