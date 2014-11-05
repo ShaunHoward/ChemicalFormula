@@ -16,83 +16,89 @@ public class ChemicalFormulaTest {
 
     @Test
     public void testJunkInput(){
-        assertFalse(invoke("      sdfsdfs"));
-        assertFalse(invoke("sdfsdfs     "));
-        assertFalse(invoke("sdfs dfs"));
-        assertFalse(invoke("H "));
-        assertFalse(invoke(" H"));
-        assertFalse(invoke(" H "));
-        assertFalse(invoke("H\nNe"));
+        assertFalse(isValidFormula("      sdfsdfs"));
+        assertFalse(isValidFormula("sdfsdfs     "));
+        assertFalse(isValidFormula("sdfs dfs"));
+        assertFalse(isValidFormula("H "));
+        assertFalse(isValidFormula(" H"));
+        assertFalse(isValidFormula(" H "));
+        assertFalse(isValidFormula("H\nNe"));
     }
 
     @Test
     public void testSingleElement() {
-        assertTrue(invoke("He"));
-        assertTrue(invoke("Ja"));
-        assertTrue(invoke("H300"));
+        assertTrue(isValidFormula("He"));
+        assertTrue(isValidFormula("Ja"));
+        assertTrue(isValidFormula("H300"));
     }
 
     @Test
     public void testMultipleElement() {
-        assertTrue(invoke("HeNe"));
-        assertTrue(invoke("HeN3"));
-        assertTrue(invoke("C3O4Az8N3"));
-        assertTrue(invoke("HeNeArOXeRn"));
+        assertTrue(isValidFormula("HeNe"));
+        assertTrue(isValidFormula("HeN3"));
+        assertTrue(isValidFormula("C3O4Az8N3"));
+        assertTrue(isValidFormula("HeNeArOXeRn"));
     }
 
     @Test
     public void testIllegalElement() {
-        assertFalse(invoke("jA"));
-        assertFalse(invoke("HeNe3rOXeRn"));
-        assertFalse(invoke("q"));
-        assertFalse(invoke("(N)"));
-        assertFalse(invoke("(NE3)"));
+        assertFalse(isValidFormula("jA"));
+        assertFalse(isValidFormula("HeNe3rOXeRn"));
+        assertFalse(isValidFormula("q"));
+        assertFalse(isValidFormula("(N)"));
+        assertFalse(isValidFormula("(NE3)"));
     }
 
     @Test
     public void testMultiplier() {
-        assertTrue(invoke("He2Ne"));
-        assertTrue(invoke("HeNe2"));
-        assertTrue(invoke("He2"));
-        assertFalse(invoke("He2e"));
+        assertTrue(isValidFormula("He2Ne"));
+        assertTrue(isValidFormula("HeNe2"));
+        assertTrue(isValidFormula("He2"));
+        assertFalse(isValidFormula("He2e"));
     }
 
     @Test
     public void testIllegalMultiplier() {
-        assertFalse(invoke("He1"));
-        assertFalse(invoke("He01"));
-        assertFalse(invoke("He0"));
-        assertFalse(invoke("He-1"));
+        assertFalse(isValidFormula("He1"));
+        assertFalse(isValidFormula("He01"));
+        assertFalse(isValidFormula("He0"));
+        assertFalse(isValidFormula("He-1"));
     }
 
     @Test
     public void testNestedParentheses(){
-        assertTrue(invoke("(He(Ne)3)3"));
-        assertFalse(invoke("(He(Ne)02)3"));
+        assertTrue(isValidFormula("(He(Ne)3)3"));
+        assertFalse(isValidFormula("(He(Ne)02)3"));
     }
 
     @Test
     public void testParentheses() {
-        assertTrue(invoke("(HeNe)3"));
-        assertTrue(invoke("(HNO3)2"));
-        assertTrue(invoke("H3(HeH)3Ne4"));
-        assertTrue(invoke("H9(NYZ3I2)2"));
-        assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2"));
-        assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2Z3"));
-        assertTrue(invoke("(NYZ3I2)2(NYZ3I2)2Z3"));
-        assertFalse(invoke("(NYZ3I22(NYZ3I2)2Z3"));
-        assertFalse(invoke("(NYZ3I2)2NYZ3I2)2Z3"));
+        assertTrue(isValidFormula("(HeNe)3"));
+        assertTrue(isValidFormula("(HNO3)2"));
+        assertTrue(isValidFormula("H3(HeH)3Ne4"));
+        assertTrue(isValidFormula("H9(NYZ3I2)2"));
+        assertTrue(isValidFormula("H9(NYZ3I2)2(NYZ3I2)2"));
+        assertTrue(isValidFormula("H9(NYZ3I2)2(NYZ3I2)2Z3"));
+        assertTrue(isValidFormula("(NYZ3I2)2(NYZ3I2)2Z3"));
+        assertFalse(isValidFormula("(NYZ3I22(NYZ3I2)2Z3"));
+        assertFalse(isValidFormula("(NYZ3I2)2NYZ3I2)2Z3"));
     }
 
     @Test
     public void testIllegalCharacters() {
-        assertFalse(invoke(""));
-        assertFalse(invoke("!"));
-        assertFalse(invoke("H!e"));
-        assertFalse(invoke("H!"));
+        assertFalse(isValidFormula(""));
+        assertFalse(isValidFormula("!"));
+        assertFalse(isValidFormula("H!e"));
+        assertFalse(isValidFormula("H!"));
     }
 
-    private boolean invoke(String givenString) {
+    /**
+     * Checks if the formula is valid by calling the analyzeFormulaCompleteness() method.
+     *
+     * @param givenString - the string to check as a valid chemical formula
+     * @return whether the chemical formula is valid or not
+     */
+    private boolean isValidFormula(String givenString) {
         if (ChemicalFormula.analyzeFormulaCompleteness(givenString).equals("T")) {
             return true;
         }
