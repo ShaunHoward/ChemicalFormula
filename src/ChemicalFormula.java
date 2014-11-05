@@ -27,7 +27,7 @@ public class ChemicalFormula {
 
             // Read in the input from std in
             while ((appendage = br.readLine()) != null) {
-                formula = formula + appendage;
+                formula = formula + "\n" + appendage;
             }
 
             //Validate the syntactical context of the formula.
