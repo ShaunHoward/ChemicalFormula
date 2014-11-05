@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the chemical formula class of project 10 in EECS 293
  *
- * @author Shaun Howard
+ * @author Shaun Xoward
  */
 public class ChemicalFormulaTest {
 
@@ -19,31 +19,31 @@ public class ChemicalFormulaTest {
         assertFalse(isValidFormula("      sdfsdfs"));
         assertFalse(isValidFormula("sdfsdfs     "));
         assertFalse(isValidFormula("sdfs dfs"));
-        assertFalse(isValidFormula("H "));
-        assertFalse(isValidFormula(" H"));
-        assertFalse(isValidFormula(" H "));
-        assertFalse(isValidFormula("H\nNe"));
+        assertFalse(isValidFormula("X "));
+        assertFalse(isValidFormula(" X"));
+        assertFalse(isValidFormula(" X "));
+        assertFalse(isValidFormula("X\nNe"));
     }
 
     @Test
     public void testSingleElement() {
-        assertTrue(isValidFormula("He"));
+        assertTrue(isValidFormula("Xe"));
         assertTrue(isValidFormula("Ja"));
-        assertTrue(isValidFormula("H300"));
+        assertTrue(isValidFormula("X300"));
     }
 
     @Test
     public void testMultipleElement() {
-        assertTrue(isValidFormula("HeNe"));
-        assertTrue(isValidFormula("HeN3"));
+        assertTrue(isValidFormula("XeNe"));
+        assertTrue(isValidFormula("XeN3"));
         assertTrue(isValidFormula("C3O4Az8N3"));
-        assertTrue(isValidFormula("HeNeArOXeRn"));
+        assertTrue(isValidFormula("XeNeArOXeRn"));
     }
 
     @Test
     public void testIllegalElement() {
         assertFalse(isValidFormula("jA"));
-        assertFalse(isValidFormula("HeNe3rOXeRn"));
+        assertFalse(isValidFormula("XeNe3rOXeRn"));
         assertFalse(isValidFormula("q"));
         assertFalse(isValidFormula("(N)"));
         assertFalse(isValidFormula("(NE3)"));
@@ -51,34 +51,34 @@ public class ChemicalFormulaTest {
 
     @Test
     public void testMultiplier() {
-        assertTrue(isValidFormula("He2Ne"));
-        assertTrue(isValidFormula("HeNe2"));
-        assertTrue(isValidFormula("He2"));
-        assertFalse(isValidFormula("He2e"));
+        assertTrue(isValidFormula("Xe2Ne"));
+        assertTrue(isValidFormula("XeNe2"));
+        assertTrue(isValidFormula("Xe2"));
+        assertFalse(isValidFormula("Xe2e"));
     }
 
     @Test
     public void testIllegalMultiplier() {
-        assertFalse(isValidFormula("He1"));
-        assertFalse(isValidFormula("He01"));
-        assertFalse(isValidFormula("He0"));
-        assertFalse(isValidFormula("He-1"));
+        assertFalse(isValidFormula("Xe1"));
+        assertFalse(isValidFormula("Xe01"));
+        assertFalse(isValidFormula("Xe0"));
+        assertFalse(isValidFormula("Xe-1"));
     }
 
     @Test
     public void testNestedParentheses(){
-        assertTrue(isValidFormula("(He(Ne)3)3"));
-        assertFalse(isValidFormula("(He(Ne)02)3"));
+        assertTrue(isValidFormula("(Xe(Ne)3)3"));
+        assertFalse(isValidFormula("(Xe(Ne)02)3"));
     }
 
     @Test
     public void testParentheses() {
-        assertTrue(isValidFormula("(HeNe)3"));
-        assertTrue(isValidFormula("(HNO3)2"));
-        assertTrue(isValidFormula("H3(HeH)3Ne4"));
-        assertTrue(isValidFormula("H9(NYZ3I2)2"));
-        assertTrue(isValidFormula("H9(NYZ3I2)2(NYZ3I2)2"));
-        assertTrue(isValidFormula("H9(NYZ3I2)2(NYZ3I2)2Z3"));
+        assertTrue(isValidFormula("(XeNe)3"));
+        assertTrue(isValidFormula("(XNO3)2"));
+        assertTrue(isValidFormula("X3(XeX)3Ne4"));
+        assertTrue(isValidFormula("X9(NYZ3I2)2"));
+        assertTrue(isValidFormula("X9(NYZ3I2)2(NYZ3I2)2"));
+        assertTrue(isValidFormula("X9(NYZ3I2)2(NYZ3I2)2Z3"));
         assertTrue(isValidFormula("(NYZ3I2)2(NYZ3I2)2Z3"));
         assertFalse(isValidFormula("(NYZ3I22(NYZ3I2)2Z3"));
         assertFalse(isValidFormula("(NYZ3I2)2NYZ3I2)2Z3"));
@@ -88,8 +88,8 @@ public class ChemicalFormulaTest {
     public void testIllegalCharacters() {
         assertFalse(isValidFormula(""));
         assertFalse(isValidFormula("!"));
-        assertFalse(isValidFormula("H!e"));
-        assertFalse(isValidFormula("H!"));
+        assertFalse(isValidFormula("X!e"));
+        assertFalse(isValidFormula("X!"));
     }
 
     /**
