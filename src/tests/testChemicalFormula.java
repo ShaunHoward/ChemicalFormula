@@ -66,6 +66,12 @@ public class testChemicalFormula {
     }
 
     @Test
+    public void testNestedParentheses(){
+        assertTrue(invoke("(He(Ne)3)3"));
+        assertFalse(invoke("(He(Ne)02)3"));
+    }
+
+    @Test
     public void testParentheses() {
         assertTrue(invoke("(HeNe)3"));
         assertTrue(invoke("(HNO3)2"));
@@ -74,8 +80,6 @@ public class testChemicalFormula {
         assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2"));
         assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2Z3"));
         assertTrue(invoke("(NYZ3I2)2(NYZ3I2)2Z3"));
-        FormulaValidator valid = new FormulaValidator();
-        assertFalse(valid.validateFormula("(NYZ3I22(NYZ3I2)2Z3"));
         assertFalse(invoke("(NYZ3I22(NYZ3I2)2Z3"));
         assertFalse(invoke("(NYZ3I2)2NYZ3I2)2Z3"));
     }

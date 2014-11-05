@@ -28,14 +28,8 @@ public class ChemicalFormula {
 //                    "|([A-Z][a-z]?[2-9]?)+");
 // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
-            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
-                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
-                    "([A-Z][a-z]?[2-9]?)*)" +
-                    "|([A-Z][a-z]?[2-9]?)+");
-    static String FORMULA = "(([A-Z][a-z]?[2-9]?)*" +
-            "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
-            "([A-Z][a-z]?[2-9]?)*)" +
-            "|([A-Z][a-z]?[2-9]?)+";
+            Pattern.compile("([A-Z][a-z]?[2-9]*)+");
+    static String FORMULA = "([A-Z][a-z]?[2-9]*)+";
 
 //    // Pattern for identifying syntactically valid chemical formula.
 //    static Pattern FORMULA_PATTERN =
@@ -115,8 +109,13 @@ public class ChemicalFormula {
         String matches = "T";
         assert formula != null : "Formula is null in soundness check.";
         assert FORMULA_PATTERN.toString().equals(FORMULA) : "Formula pattern is not correct pattern.";
-        Matcher matcher = FORMULA_PATTERN.matcher(formula);
-        if (checkParenthesesGrouping(formula) || !matcher.matches()){
+
+        if (!(formula = checkParenthesesGrouping(formula)).isEmpty()){
+            Matcher matcher = FORMULA_PATTERN.matcher(formula);
+            if (!matcher.matches()) {
+                matches = "F";
+            }
+        } else {
             matches = "F";
         }
 //        List<String> components = parseComponents(formula);
@@ -138,11 +137,13 @@ public class ChemicalFormula {
      * the formula regular expression.
      *
      * @param formula - the formula to check the parentheses grouping of
-     * @return whether the parentheses grouping is valid for the formula
+     * @return a parentheses-stripped string of the formula or an empty string
+     * if the parentheses grouping was incorrect
      */
-    private static boolean checkParenthesesGrouping(String formula){
+    private static String checkParenthesesGrouping(String formula){
         assert formula != null : "Formula is null during stripping of parentheses.";
         StringBuilder formulaBuilder = new StringBuilder(formula);
+        StringBuilder emptyBuilder = new StringBuilder("");
         stripFrontParentheses(formulaBuilder);
         int endParenIndex = 0;
         Matcher multMatcher;
@@ -154,12 +155,17 @@ public class ChemicalFormula {
                 if (Character.isDigit(multiplier)) {
                     multMatcher = MULTIPLIER.matcher(Character.toString(multiplier));
                     if (!multMatcher.matches()){
-                        return false;
+                        formulaBuilder = emptyBuilder;
                     }
+                } else {
+                    formulaBuilder = emptyBuilder;
                 }
             }
+            else {
+                formulaBuilder = emptyBuilder;
+            }
         }
-        return true;
+        return formulaBuilder.toString();
     }
 
     /**

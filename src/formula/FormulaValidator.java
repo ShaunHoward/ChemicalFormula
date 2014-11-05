@@ -45,6 +45,7 @@ public class FormulaValidator {
 
     /**
      * Checks if the input formula only contains whitespace.
+     * Adds an error to error list accordingly.
      *
      * @param formula - the formula to check for only whitespace
      */
@@ -58,6 +59,7 @@ public class FormulaValidator {
 
     /**
      * Checks if the input formula contains multiple lines.
+     * Adds an error to error list accordingly.
      *
      * @param formula - the formula to check for multiple lines
      */
@@ -70,6 +72,7 @@ public class FormulaValidator {
 
     /**
      * Checks if the formula contains a space anywhere.
+     * Adds an error to error list accordingly.
      *
      * @param formula - the formula to check for a space
      */
@@ -84,6 +87,7 @@ public class FormulaValidator {
     /**
      * Checks if the formula has matching parenthesis, if
      * there are any.
+     * Adds an error to error list accordingly.
      *
      * @param formula - the formula to check for matching parentheses
      */
@@ -103,11 +107,28 @@ public class FormulaValidator {
                 } else {
                     errors.add("Input formula contained too many ending parentheses.");
                 }
-            } else {
-                errors.add("Input formula contained too many starting parentheses.");
             }
         }
+        assert parentheses != null :"Stack is null after checking matched parentheses.";
+        assert parentheses != null :"Formula builder is null after checking matched parentheses.";
+        checkRemainingParentheses(parentheses, formulaBuilder);
+    }
 
+    /**
+     * Checks if the parentheses stack is not empty or if the input string
+     * builder still contains ending parentheses.
+     * When either are true, an error about mismatched parentheses is added
+     * to the error list.
+     *
+     * @param stack - the stack to check if empty from parentheses matching
+     * @param formula - the string builder to check for ending parentheses
+     */
+    private void checkRemainingParentheses(Stack stack, StringBuilder formula){
+        if (!stack.isEmpty()){
+            errors.add("Input formula contained too many starting parentheses.");
+        } else if (formula.indexOf(")") > -1){
+            errors.add("Input formula contained too many ending parentheses.");
+        }
     }
 
     /**
