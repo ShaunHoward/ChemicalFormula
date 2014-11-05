@@ -20,7 +20,13 @@ import java.util.regex.Pattern;
  */
 public class ChemicalFormula {
 
-    // Pattern for identifying syntactically valid chemical formula.
+//    // Pattern for identifying syntactically valid chemical formula.
+//    static Pattern FORMULA_PATTERN =
+//            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
+//                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
+//                    "([A-Z][a-z]?[2-9]?)*)" +
+//                    "|([A-Z][a-z]?[2-9]?)+");
+// Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
             Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
                     "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
@@ -110,7 +116,7 @@ public class ChemicalFormula {
         assert formula != null : "Formula is null in soundness check.";
         assert FORMULA_PATTERN.toString().equals(FORMULA) : "Formula pattern is not correct pattern.";
         Matcher matcher = FORMULA_PATTERN.matcher(formula);
-        if (!matcher.matches()){
+        if (checkParenthesesGrouping(formula) || !matcher.matches()){
             matches = "F";
         }
 //        List<String> components = parseComponents(formula);
@@ -125,9 +131,49 @@ public class ChemicalFormula {
         return matches;
     }
 
-//    private static boolean checkParenthesesMultiplier(String formula){
-//
-//    }
+    /**
+     * Checks the parentheses grouping in the given formula. Determines
+     * whether the grouping multiplier is valid and strips the parentheses
+     * from the formula to reduce complexity in checking the formula with
+     * the formula regular expression.
+     *
+     * @param formula - the formula to check the parentheses grouping of
+     * @return whether the parentheses grouping is valid for the formula
+     */
+    private static boolean checkParenthesesGrouping(String formula){
+        assert formula != null : "Formula is null during stripping of parentheses.";
+        StringBuilder formulaBuilder = new StringBuilder(formula);
+        stripFrontParentheses(formulaBuilder);
+        int endParenIndex = 0;
+        Matcher multMatcher;
+
+        while ((endParenIndex = formulaBuilder.indexOf(")")) > -1){
+            formulaBuilder.deleteCharAt(endParenIndex);
+            if (endParenIndex < formulaBuilder.length()) {
+                char multiplier = formulaBuilder.charAt(endParenIndex);
+                if (Character.isDigit(multiplier)) {
+                    multMatcher = MULTIPLIER.matcher(Character.toString(multiplier));
+                    if (!multMatcher.matches()){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Strips the front parentheses from the given string builder.
+     *
+     * @param formulaBuilder - the builder for the formula to remove
+     *                       front parentheses from
+     */
+    private static void stripFrontParentheses(StringBuilder formulaBuilder){
+        int beginParenIndex = 0;
+        while((beginParenIndex = formulaBuilder.indexOf("(")) > -1){
+            formulaBuilder.deleteCharAt(beginParenIndex);
+        }
+    }
 
     /**
      * Parses the formula components based on parentheses.

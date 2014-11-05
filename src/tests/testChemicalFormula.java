@@ -77,6 +77,7 @@ public class testChemicalFormula {
         FormulaValidator valid = new FormulaValidator();
         assertFalse(valid.validateFormula("(NYZ3I22(NYZ3I2)2Z3"));
         assertFalse(invoke("(NYZ3I22(NYZ3I2)2Z3"));
+        assertFalse(invoke("(NYZ3I2)2NYZ3I2)2Z3"));
     }
 
     @Test
