@@ -36,8 +36,7 @@ public class FormulaValidator {
         checkEmptyError(formula);
         checkMultipleLineError(formula);
         checkSpaceError(formula);
-//        return checkPotentialFormula(errors);
-        return false;
+        return checkPotentialFormula(errors);
     }
 
     /**
@@ -72,5 +71,18 @@ public class FormulaValidator {
         if(formula.contains(" ")){
             errors.add("Input formula contained at least one space.");
         }
+    }
+
+    /**
+     * Checks if the formula is a potential chemical formula
+     * according to the amount of errors. If there are zero
+     * errors, true is returned. Otherwise, false is
+     * returned.
+     *
+     * @param errors - the errors found in the formula
+     * @return whether the formula is potentially a chemical formula
+     */
+    private boolean checkPotentialFormula(List<String> errors){
+        return errors.isEmpty();
     }
 }
