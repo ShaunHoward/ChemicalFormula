@@ -113,7 +113,7 @@ public class FormulaValidator {
             }
         }
         assert parentheses != null :"Stack is null after checking matched parentheses.";
-        assert parentheses != null :"Formula builder is null after checking matched parentheses.";
+        assert formulaBuilder != null :"Formula builder is null after checking matched parentheses.";
         // Check if there are any parentheses left unmatched.
         checkRemainingParenthesesError(parentheses, formulaBuilder);
     }
