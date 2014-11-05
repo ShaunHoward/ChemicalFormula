@@ -2,6 +2,7 @@ package formula;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Validates the syntactic context of a chemical formula.
@@ -38,6 +39,7 @@ public class FormulaValidator {
         checkEmptyError(formula);
         checkMultipleLineError(formula);
         checkSpaceError(formula);
+        checkMatchedParenthesis(formula);
         return checkPotentialFormula(errors);
     }
 
@@ -72,6 +74,34 @@ public class FormulaValidator {
     private void checkSpaceError(String formula) {
         if(formula.contains(" ")){
             errors.add("Input formula contained at least one space.");
+        }
+    }
+
+
+    /**
+     * Checks if the formula has matching parenthesis, if
+     * there are any.
+     *
+     * @param formula - the formula to check for matching parentheses
+     */
+    private void checkMatchedParenthesis(String formula) {
+        String formulaCopy = new String(formula);
+        Stack parentheses = new Stack();
+        while(formulaCopy.contains("(")){
+            formulaCopy = formulaCopy.replaceFirst("\\(", "");
+            parentheses.push("(");
+        }
+        while(formulaCopy.contains(")")){
+            formulaCopy.replaceFirst("\\)","");
+            if (!parentheses.isEmpty()) {
+                parentheses.pop();
+            } else {
+                errors.add("Input formula contained too many ending parentheses.");
+            }
+        }
+
+        if (!parentheses.isEmpty()){
+            errors.add("Input formula contained too many starting parentheses.");
         }
     }
 
