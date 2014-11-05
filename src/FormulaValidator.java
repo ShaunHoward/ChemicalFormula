@@ -35,7 +35,7 @@ public class FormulaValidator {
     public boolean validateFormula(String formula){
         checkEmptyError(formula);
         checkMultipleLineError(formula);
-//        checkSpaceError(formula);
+        checkSpaceError(formula);
 //        return checkPotentialFormula(errors);
         return false;
     }
@@ -63,4 +63,14 @@ public class FormulaValidator {
         }
     }
 
+    /**
+     * Checks if the formula contains a space anywhere.
+     *
+     * @param formula - the formula to check for a space
+     */
+    private void checkSpaceError(String formula) {
+        if(formula.contains(" ")){
+            errors.add("Input formula contained at least one space.");
+        }
+    }
 }
