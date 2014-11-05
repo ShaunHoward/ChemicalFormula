@@ -28,8 +28,8 @@ public class ChemicalFormula {
 //                    "|([A-Z][a-z]?[2-9]?)+");
 // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
-            Pattern.compile("([A-Z][a-z]?[2-9]*)+");
-    static String FORMULA = "([A-Z][a-z]?[2-9]*)+";
+            Pattern.compile("([A-Z][a-z]?([2-9][0-9]*)?)+");
+    static String FORMULA = "([A-Z][a-z]?([2-9][0-9]*)?)+";
 
 //    // Pattern for identifying syntactically valid chemical formula.
 //    static Pattern FORMULA_PATTERN =

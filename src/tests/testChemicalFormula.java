@@ -29,7 +29,7 @@ public class testChemicalFormula {
     public void testSingleElement() {
         assertTrue(invoke("He"));
         assertTrue(invoke("Ja"));
-        assertTrue(invoke("H"));
+        assertTrue(invoke("H300"));
     }
 
     @Test
