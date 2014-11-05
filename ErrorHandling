@@ -1,0 +1,49 @@
+Project 10 - Chemistry - EECS 293
+Error Handling Architecture
+Shaun Howard
+
+When the user enters a string, the program takes that string
+and tries to validate the context. Context validation considers
+the following things:
+Empty String (just whitespace)
+Multiple lines (invalid formula)
+Spaces in string (invalid formula)
+
+The validator acts as a barricade for the program. It is called
+to after the user enters the string. This barricade protects the
+other methods of the ChemicalFormula class from bad input data.
+
+In the ChemicalFormula class, local error handling is used. 
+I tried to implement matching parentheses, but without a 
+grammar, lexer, and parser, this task was a bit cumbersome
+and complex. That implementation used exceptions, which
+were propagated up to the main method and caught in the same class.
+The program would then print "F" in any of the exception catches unless
+an IOException occurred, in which a simple message about
+in/out issues would display to the user. 
+
+The FormulaValidator class uses an error list to track errors globally.
+When an error is found in the context, it is added to the list.
+The singular validation method, however, calls the rest of the methods 
+in the validator so the validation process is sequential.
+Thus, the errors are contained in the validator class but propagate
+through that class until validation is finished.
+At the end of validation, the amount of errors are checked. 
+If there are no errors, the validator returns a good response to
+keep going on the formula. If there are errors, the validator returns
+a response to stop and print "F".
+
+The program has focuses in correctness and robustness. It is correct
+upon the extent to which it works. It is robust in avoiding complications
+with matching parentheses and high complexity code. It simply avoids those
+vulnerable operations that could cause infinite loops or program crashes
+in an effort to provide a manageable, mostly accurate solution that will
+just print "F" in nested cases. This is correct for the program because
+that is how it was written. 
+
+Assertions are used in places to test pre-conditions and post-conditions.
+They test for things that should never be true. They even test in the
+matching parentheses methods that I wrote but do not use, so that if I 
+did use those methods I could better debug my code.
+
+

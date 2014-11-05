@@ -26,6 +26,10 @@ public class ChemicalFormula {
                     "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
                     "([A-Z][a-z]?[2-9]?)*)" +
                     "|([A-Z][a-z]?[2-9]?)+");
+    static String FORMULA = "(([A-Z][a-z]?[2-9]?)*" +
+            "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
+            "([A-Z][a-z]?[2-9]?)*)" +
+            "|([A-Z][a-z]?[2-9]?)+";
 
 //    // Pattern for identifying syntactically valid chemical formula.
 //    static Pattern FORMULA_PATTERN =
@@ -53,6 +57,8 @@ public class ChemicalFormula {
             while ((appendage = br.readLine()) != null) {
                 formula = formula + "\n" + appendage;
             }
+
+            assert formula != null : "Formula input string is null.";
 
             //Prints whether the chemical formula is syntactically valid.
             System.out.println(analyzeFormulaCompleteness(formula));
@@ -84,6 +90,10 @@ public class ChemicalFormula {
             potential = "F";
         }
 
+        assert potential != null : "Potential formula string is null.";
+        assert potential.equals("T") || potential.equals("F"): "Potential" +
+                "is not in correct form from formula analysis.";
+
         return potential;
     }
 
@@ -97,6 +107,8 @@ public class ChemicalFormula {
      */
     private static String analyzeFormulaSoundness(String formula){
         String matches = "T";
+        assert formula != null : "Formula is null in soundness check.";
+        assert FORMULA_PATTERN.toString().equals(FORMULA) : "Formula pattern is not correct pattern.";
         Matcher matcher = FORMULA_PATTERN.matcher(formula);
         if (!matcher.matches()){
             matches = "F";
@@ -125,6 +137,7 @@ public class ChemicalFormula {
         List<String> components = new ArrayList<>();
         String subFormula = "";
         int endParenIndex = 0;
+        assert formula != null : "Formula is null before parsing.";
 
         //Parses the parenthesized components into list.
         if (formula.contains("(")){
@@ -135,10 +148,15 @@ public class ChemicalFormula {
                 components.add(subFormula);
                 formula.replace(subFormula, "");
             }
+
         }
+
+        assert formula != null : "Formula is null after parsing.";
+        assert formula.contains("(") == false : "Parentheses were not correctly parsed.";
 
         //Adds remaining components to list.
         components.add(formula);
+        assert !components.isEmpty() : "Component list is empty after parsing.";
         return components;
     }
 
@@ -151,19 +169,27 @@ public class ChemicalFormula {
      * @throws IllegalFormatException - thrown when the multiplier is not between 2 and 9
      */
     private static void checkParenthesesMultiplier(String formula, int endParenIndex) throws IllegalFormatException {
+        assert formula != null : "Formula is null before checking parentheses multiplier.";
         StringBuilder formulaBuilder = new StringBuilder(formula);
+        assert endParenIndex > 1 : "Ending parenthesis index is at beginning of formula.";
         int currIndex = endParenIndex + 1;
         StringBuilder numberBuilder = new StringBuilder();
+
         while(Character.isDigit(formulaBuilder.charAt(currIndex))){
             numberBuilder.append(formulaBuilder.charAt(currIndex));
             formulaBuilder.deleteCharAt(currIndex);
             currIndex++;
         }
+
+        assert !Character.isDigit(formulaBuilder.charAt(currIndex)) :
+                "Character was digit when it should not have been.";
         Matcher matcher = MULTIPLIER.matcher(numberBuilder.toString());
         if (!matcher.matches()){
             throw new IllegalArgumentException("Incorrect multipliers following parentheses.");
         }
+
         formula = formulaBuilder.toString();
+        assert formula != null : "Formula is null after checking parentheses multiplier.";
     }
 
 }

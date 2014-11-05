@@ -49,6 +49,7 @@ public class FormulaValidator {
      * @param formula - the formula to check for only whitespace
      */
     private void checkEmptyError(String formula) {
+        assert formula != null : "Formula is null during empty check.";
         String trimmedString = formula.trim();
         if (trimmedString.isEmpty()){
             errors.add("Input formula contained only whitespace.");
@@ -61,6 +62,7 @@ public class FormulaValidator {
      * @param formula - the formula to check for multiple lines
      */
     private void checkMultipleLineError(String formula) {
+        assert formula != null : "Formula is null during multiple line check.";
         if (formula.contains("\n")){
             errors.add("Input formula contained multiple lines.");
         }
@@ -72,6 +74,7 @@ public class FormulaValidator {
      * @param formula - the formula to check for a space
      */
     private void checkSpaceError(String formula) {
+        assert formula != null : "Formula is null during space check.";
         if(formula.contains(" ")){
             errors.add("Input formula contained at least one space.");
         }
@@ -85,6 +88,7 @@ public class FormulaValidator {
      * @param formula - the formula to check for matching parentheses
      */
     private void checkMatchedParenthesis(String formula) {
+        assert formula != null : "Formula is null during matched parentheses check.";
         String formulaCopy = new String(formula);
         Stack parentheses = new Stack();
         while(formulaCopy.contains("(")){

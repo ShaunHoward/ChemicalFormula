@@ -70,6 +70,9 @@ public class testChemicalFormula {
         assertTrue(invoke("(HNO3)2"));
         assertTrue(invoke("H3(HeH)3Ne4"));
         assertTrue(invoke("H9(NYZ3I2)2"));
+        assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2"));
+        assertTrue(invoke("H9(NYZ3I2)2(NYZ3I2)2Z3"));
+        assertTrue(invoke("(NYZ3I2)2(NYZ3I2)2Z3"));
     }
 
     @Test
