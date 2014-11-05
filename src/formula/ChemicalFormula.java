@@ -20,14 +20,20 @@ import java.util.regex.Pattern;
  */
 public class ChemicalFormula {
 
+//    // Pattern for identifying syntactically valid chemical formula.
+//    static Pattern FORMULA_PATTERN =
+//            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
+//                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
+//                    "([A-Z][a-z]?[2-9]?)*)" +
+//                    "|([A-Z][a-z]?[2-9]?)+");
+
     // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
-            Pattern.compile("(([A-Z][a-z]?[2-9]?)*" +
-                    "([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)][2-9])+" +
-                    "([A-Z][a-z]?[2-9]?)*)" +
-                    "|([A-Z][a-z]?[2-9]?)+");
+            Pattern.compile("([\\(]([A-Z][a-z]?[2-9]?){2,}[\\)])" +
+                    "|([A-Z][a-z]?[2-9]?)");
 
-    static Pattern NUMBER = Pattern.compile("[2-9]");
+    // Pattern for identify the correct multiplier in a formula.
+    static Pattern MULTIPLIER = Pattern.compile("[2-9]");
 
     /**
      * Takes a string from the standard in and determines if it is
@@ -89,21 +95,33 @@ public class ChemicalFormula {
      * @param formula - the formula to check for syntactical soundness
      */
     private static String analyzeFormulaSoundness(String formula) throws IllegalArgumentException {
-        String matches = "";
-        Matcher matcher = FORMULA_PATTERN.matcher(formula);
-        if(matcher.matches()){
-            matches = "T";
-        } else {
-            matches = "F";
+        String matches = "T";
+        List<String> components = parseComponents(formula);
+        for (String component : components){
+            if (matches.equals("F")){
+                return matches;
+            } else if (!FORMULA_PATTERN.matcher(component).matches()) {
+                matches = "F";
+            }
         }
+
         return matches;
     }
 
-    private static List stripParentheses(String formula) throws IllegalArgumentException {
-        List components = new ArrayList();
+    /**
+     * Parses the formula components based on parentheses.
+     * The parsed tokens are put into a list and returned.
+     * @param formula - the formula to parse based on parentheses
+     * @return the list of parsed formula tokens
+     * @throws IllegalArgumentException - thrown when a parentheses multiplier
+     * does not lie between 2 and 9
+     */
+    private static List<String> parseComponents(String formula) throws IllegalArgumentException {
+        List<String> components = new ArrayList<>();
         String subFormula = "";
         int endParenIndex = 0;
 
+        //Parses the parenthesized components into list.
         if (formula.contains("(")){
             while(formula.contains("(")){
                 endParenIndex = formula.indexOf(")");
@@ -113,6 +131,10 @@ public class ChemicalFormula {
                 formula.replace(subFormula, "");
             }
         }
+
+        //Adds remaining components to list.
+        components.add(formula);
+        return components;
     }
 
     /**
@@ -132,7 +154,7 @@ public class ChemicalFormula {
             formulaBuilder.deleteCharAt(currIndex);
             currIndex++;
         }
-        Matcher matcher = NUMBER.matcher(numberBuilder.toString());
+        Matcher matcher = MULTIPLIER.matcher(numberBuilder.toString());
         if (!matcher.matches()){
             throw new IllegalArgumentException("Incorrect multipliers following parentheses.");
         }
