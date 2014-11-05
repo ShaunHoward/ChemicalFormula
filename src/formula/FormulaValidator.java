@@ -11,7 +11,7 @@ import java.util.Stack;
  * class, so invalid input is caught early.
  *
  * If the string being checked can be a syntactically valid
- * chemical formula, true will be returned.
+ * chemical formula via its context, true will be returned.
  *
  * Otherwise, false will be returned.
  *
@@ -28,7 +28,7 @@ public class FormulaValidator {
 
     /**
      * Validate that the given formula can be a syntactically
-     * valid chemical formula.
+     * valid chemical formula via its context.
      * Returns true if it can be valid, false otherwise.
      *
      * @param formula - the formula to validate
@@ -39,7 +39,7 @@ public class FormulaValidator {
         checkEmptyError(formula);
         checkMultipleLineError(formula);
         checkSpaceError(formula);
-        checkMatchedParenthesis(formula);
+        checkMatchedParenthesisError(formula);
         return checkPotentialFormula(errors);
     }
 
@@ -91,7 +91,7 @@ public class FormulaValidator {
      *
      * @param formula - the formula to check for matching parentheses
      */
-    private void checkMatchedParenthesis(String formula) {
+    private void checkMatchedParenthesisError(String formula) {
         assert formula != null : "Formula is null during matched parentheses check.";
         StringBuilder formulaBuilder = new StringBuilder(formula);
         Stack parentheses = new Stack();
@@ -115,7 +115,7 @@ public class FormulaValidator {
         assert parentheses != null :"Stack is null after checking matched parentheses.";
         assert parentheses != null :"Formula builder is null after checking matched parentheses.";
         // Check if there are any parentheses left unmatched.
-        checkRemainingParentheses(parentheses, formulaBuilder);
+        checkRemainingParenthesesError(parentheses, formulaBuilder);
     }
 
     /**
@@ -127,7 +127,7 @@ public class FormulaValidator {
      * @param stack - the stack to check if empty from parentheses matching
      * @param formula - the string builder to check for ending parentheses
      */
-    private void checkRemainingParentheses(Stack stack, StringBuilder formula){
+    private void checkRemainingParenthesesError(Stack stack, StringBuilder formula){
         if (!stack.isEmpty()){
             errors.add("Input formula contained too many starting parentheses.");
         } else if (formula.indexOf(")") > -1){

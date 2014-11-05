@@ -66,7 +66,8 @@ public class ChemicalFormula {
      * can be a chemical formula, otherwise, returns "F".
      *
      * @param formula - the formula to check for syntactical completeness
-     * @return whether the formula is a syntactically valid chemical formula
+     * @return whether the formula is a syntactically valid chemical formula,
+     * "T" or "F"
      */
     public static String analyzeFormulaCompleteness(String formula){
         FormulaValidator validator = new FormulaValidator();
@@ -95,6 +96,7 @@ public class ChemicalFormula {
      * syntactically valid, otherwise returns a string "F".
      *
      * @param formula - the formula to check for syntactical soundness
+     * @return whether the formula is sound as a string, "T" or "F"
      */
     private static String analyzeFormulaSoundness(String formula){
         String matches = "T";
