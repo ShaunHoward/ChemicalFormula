@@ -33,11 +33,23 @@ public class FormulaValidator {
      * chemical formula
      */
     public boolean validateFormula(String formula){
-//        checkEmptyError(formula);
+        checkEmptyError(formula);
 //        checkMultipleLineError(formula);
 //        checkSpaceError(formula);
 //        return checkPotentialFormula(errors);
         return false;
+    }
+
+    /**
+     * Checks if the input formula only contains whitespace.
+     *
+     * @param formula - the formula to check for only whitespace
+     */
+    private void checkEmptyError(String formula) {
+        String trimmedString = formula.trim();
+        if (trimmedString.isEmpty()){
+            errors.add("Input formula contained only whitespace.");
+        }
     }
 
 }
