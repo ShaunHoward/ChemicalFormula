@@ -30,6 +30,7 @@ public class ChemicalFormulaTest {
         assertTrue(isValidFormula("Xe"));
         assertTrue(isValidFormula("Ja"));
         assertTrue(isValidFormula("X300"));
+        assertTrue(isValidFormula("Xee"));
     }
 
     @Test

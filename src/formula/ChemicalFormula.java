@@ -22,10 +22,10 @@ public class ChemicalFormula {
 
     // Pattern for identifying syntactically valid chemical formula.
     static Pattern FORMULA_PATTERN =
-            Pattern.compile("([A-Z][a-z]?([2-9][0-9]*)?)+");
+            Pattern.compile("([A-Z][a-z]{0,2}([2-9][0-9]*)?)+");
 
     // Formula to match in assertions.
-    static String FORMULA = "([A-Z][a-z]?([2-9][0-9]*)?)+";
+    static String FORMULA = "([A-Z][a-z]{0,2}([2-9][0-9]*)?)+";
 
     // Pattern for identify the correct multiplier in a formula.
     static Pattern MULTIPLIER = Pattern.compile("[2-9]");
