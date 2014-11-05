@@ -125,6 +125,10 @@ public class ChemicalFormula {
         return matches;
     }
 
+//    private static boolean checkParenthesesMultiplier(String formula){
+//
+//    }
+
     /**
      * Parses the formula components based on parentheses.
      * The parsed tokens are put into a list and returned.

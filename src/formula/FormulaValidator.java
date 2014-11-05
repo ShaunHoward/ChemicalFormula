@@ -39,7 +39,7 @@ public class FormulaValidator {
         checkEmptyError(formula);
         checkMultipleLineError(formula);
         checkSpaceError(formula);
-//        checkMatchedParenthesis(formula);
+        checkMatchedParenthesis(formula);
         return checkPotentialFormula(errors);
     }
 
@@ -89,24 +89,25 @@ public class FormulaValidator {
      */
     private void checkMatchedParenthesis(String formula) {
         assert formula != null : "Formula is null during matched parentheses check.";
-        String formulaCopy = new String(formula);
+        StringBuilder formulaBuilder = new StringBuilder(formula);
         Stack parentheses = new Stack();
-        while(formulaCopy.contains("(")){
-            formulaCopy = formulaCopy.replaceFirst("\\(", "");
+        int beginParenIndex = 0;
+        int endParenIndex = 0;
+        while((beginParenIndex = formulaBuilder.indexOf("(")) > -1){
+            formulaBuilder.deleteCharAt(beginParenIndex);
             parentheses.push("(");
-        }
-        while(formulaCopy.contains(")")){
-            formulaCopy.replaceFirst("\\)","");
-            if (!parentheses.isEmpty()) {
-                parentheses.pop();
+            if((endParenIndex = formulaBuilder.indexOf(")")) > -1 && endParenIndex > beginParenIndex){
+                formulaBuilder.deleteCharAt(endParenIndex);
+                if (!parentheses.isEmpty()) {
+                    parentheses.pop();
+                } else {
+                    errors.add("Input formula contained too many ending parentheses.");
+                }
             } else {
-                errors.add("Input formula contained too many ending parentheses.");
+                errors.add("Input formula contained too many starting parentheses.");
             }
         }
 
-        if (!parentheses.isEmpty()){
-            errors.add("Input formula contained too many starting parentheses.");
-        }
     }
 
     /**
