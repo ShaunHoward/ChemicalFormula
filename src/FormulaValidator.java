@@ -34,7 +34,7 @@ public class FormulaValidator {
      */
     public boolean validateFormula(String formula){
         checkEmptyError(formula);
-//        checkMultipleLineError(formula);
+        checkMultipleLineError(formula);
 //        checkSpaceError(formula);
 //        return checkPotentialFormula(errors);
         return false;
@@ -49,6 +49,17 @@ public class FormulaValidator {
         String trimmedString = formula.trim();
         if (trimmedString.isEmpty()){
             errors.add("Input formula contained only whitespace.");
+        }
+    }
+
+    /**
+     * Checks if the input formula contains multiple lines.
+     *
+     * @param formula - the formula to check for multiple lines
+     */
+    private void checkMultipleLineError(String formula) {
+        if (formula.contains("\n")){
+            errors.add("Input formula contained multiple lines.");
         }
     }
 
