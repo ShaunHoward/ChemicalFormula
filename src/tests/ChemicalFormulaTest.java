@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Shaun Howard
  */
-public class testChemicalFormula {
+public class ChemicalFormulaTest {
 
     @Test
     public void testJunkInput(){
